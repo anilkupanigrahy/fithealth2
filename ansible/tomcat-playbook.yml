@@ -1,0 +1,38 @@
+---
+- hosts: all
+  tasks:
+  - name: install jdk
+    apt:
+      name: openjdk-11-jdk
+      state: present
+      update_cache: yes
+    become: yes        
+  - name: create app server directory
+    file:
+      path: ~/middleware
+      state: directory
+  - name: download tomcat server
+    get_url:
+      url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.17/bin/apache-tomcat-10.0.17.tar.gz
+      dest: ~/middleware
+  - name: extract apache tomcat
+    unarchive:
+      src: ~/middleware/apache-tomcat-10.0.17.tar.gz
+      dest: ~/middleware    
+      remote_src: yes
+  - name: copy war
+    copy:
+      src: /tmp/fithealth2.war
+      dest: ~/middleware/apache-tomcat-10.0.17/webapps   
+  - name: create tomcat service
+    copy:
+      src: /tmp/tomcat.service
+      dest: /etc/systemd/system
+    become: yes
+  - name: daemon reload
+    systemd:
+      name: tomcat
+      state: restarted
+      daemon_reload: yes
+    become: yes
+...

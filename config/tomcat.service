@@ -1,0 +1,16 @@
+[Unit]
+Description=tomcat service
+After=network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+Environment=CATALINA_HOME=/home/ubuntu/middleware/apache-tomcat-10.0.17
+Environment=CATALINA_BASE=/home/ubuntu/middleware/apache-tomcat-10.0.17
+
+ExecStart=/home/ubuntu/middleware/apache-tomcat-10.0.17/bin/startup.sh
+ExecStop=/home/ubuntu/middleware/apache-tomcat-10.0.17/bin/shutdown.sh
+
+[Install]
+WantedBy=multi-user.target
